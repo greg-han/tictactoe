@@ -1,4 +1,4 @@
-##Tic Tac Toe
+## Tic Tac Toe
 Pretty self explanatory.
 My attempt at making a tic tac toe game.
 
