@@ -1,0 +1,95 @@
+
+@import url('https://fonts.googleapis.com/css?family=VT323');
+body{
+ background-color: #20504F;
+ background-color: #7A8D91;
+}
+
+fieldset{
+ border: 0;
+}
+
+h1{
+ color: #F3F4F4;
+ text-shadow: 2px 2px 2px #8F8F8F;
+ text-align: center;
+ font-family: 'VT323', monospace;
+ font-size: 3.15em;
+ margin-bottom: 0px;
+}
+
+.container-fluid{
+ justify-items: center;
+ justify-content: center;
+}
+
+table{
+ color: white;
+ width: 240px;
+ border-collapse: collapse;
+ margin: auto;
+ border-radius: 10%;
+ table-layout:fixed;
+  box-shadow: 2px 2px 2px 2px
+1px rgba(0,0,0,0.68),
+inset -1px -1px -1px -1px;
+ color: #1D98AE;
+ white-space: nowrap;
+}
+
+td{
+background-color: #26B9D3;
+//width: 33.333%;
+width: 80px;
+height: 80px;
+box-shadow: 2px  2px 2px 2px;
+1px rgba(0,0,0,0.87),
+inset -1px -1px -1px -1px;
+border-radius: 40%;
+font-family: 'VT323', monospace;
+font-size: 4.21em;
+font-weight: bold;
+white-space: nowrap;
+text-align: center;
+}
+a{
+ color: #F3F4F4;
+ text-shadow: 2px 2px 2px #8F8F8F;
+}
+td:after {
+ content: '';
+ display: block;
+ //margin-top: 100%;
+ border-radius: 40%;
+ white-space: nowrap;
+ table-layout:fixed;
+ 
+}
+
+#buttons{
+ color: #F3F4F4;
+ text-shadow: 2px 2px 2px #8F8F8F;
+ text-align: center;
+ font-family: 'VT323', monospace;
+ font-size: 2em;
+ font-weight: bold;
+ margin-top: 0.8%;
+}
+
+#O{
+ margin-left: -14px;
+}
+
+#X{
+ margin-right: 2.5px;
+}
+#start{
+
+}
+
+#restart{
+
+}
+
+#XO{
+}
