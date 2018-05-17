@@ -2,22 +2,42 @@ window.onload = init;
 //Try "blocking" check if X is close to copmlete
 //If not, use the LCV heuristic.
 //This can be set with "X" and "O" in the slots if need be.
-var board = [11,12,13,21,22,23,31,32,33];
-var inPlay = false;
-var self;
-var ai;
-var boardConstraints;
-//Turn can be either human or ai
+var selectorX = document.getElementById("X");
+var selectorO = document.getElementById("O");
+
+//Framework for the game.
 var turn = "";
 var BOARD_LENGTH = 9;
 var SOLUTION_LENGTH = 7;
-var oneone,onetwo,onethree,twoone,twotwo,twothree,threeone,threetwo,threethree;
+var inPlay = false;
+var board = [11,12,13,21,22,23,31,32,33];
+var ORIGsolutions = [[11,12,13],[11,21,31],[11,22,33],[12,22,32],[21,22,23],[31,32,33],[13,23,33]];
+var ORIGboard = {
+ "11" : [11,12,13,21,31,22,33],
+ "12" : [11,13,21,22,23],
+ "13" : [12,11,23,33,22,31],
+ "21" : [11,12,22,23,31,32],
+ "22" : [11,12,13,21,23,31,32,33],
+ "23" : [13,12,22,21,33,32],
+ "31" : [21,11,32,33,22,13],
+ "32" : [22,12,31,33,21,23],
+ "33" : [32,31,23,13,22,11]
+ }
 var parseMap ={
  "11" : oneone, "12" : onetwo, "13":onethree,
  "21" : twoone, "22" : twotwo, "23": twothree,
  "31" : threeone, "32" : threetwo, "33" :threethree
  }
- //player object.
+//End framework
+
+//All variables that will have values upon construction
+var human;
+var ai;
+var boardConstraints;
+var oneone,onetwo,onethree,twoone,twotwo,twothree,threeone,threetwo,threethree;
+//end constructor variables.
+
+//player object.
 var player = function(){
   var side = "";
   var solved = false;
@@ -37,19 +57,9 @@ function init(){
  threeone = document.getElementById("31");
  threetwo = document.getElementById("32");
  threethree = document.getElementById("33");
- human = player();
- ai = player();
- boardConstraints = {
- "11" : [11,12,13,21,31,22,33],
- "12" : [11,13,21,22,23],
- "13" : [12,11,23,33,22,31],
- "21" : [11,12,22,23,31,32],
- "22" : [11,12,13,21,23,31,32,33],
- "23" : [13,12,22,21,33,32],
- "31" : [21,11,32,33,22,13],
- "32" : [22,12,31,33,21,23],
- "33" : [32,31,23,13,22,11]
- }
+ human = new player();
+ ai = new player();
+ boardConstraints = ORIGboard;
 }
 
 //Simply inputs the square, no smarts.
@@ -59,12 +69,15 @@ function fillSquare(square){
  if (inPlay){
   var csquarenum = parseInt(parseMap(String(square).innerHTML == human.side));
   for(var i = 0; i < BOARD_LENGTH; i++){
+    //This already checks the constraints.
     if(board.indexOf(squarenum) != NaN){
      //constraint filling function
      updateConstraints(squarenum); 
      //update solution states
      //update board.
      if(turn == "human"){
+       ///do consistency checks here, do not change turns until
+       //a square has been picked. You can 
        board[board.indexOf(squarenum)] = String(human.side);
      }//end of if turn is human
      else{//if turn is ai.
@@ -73,9 +86,81 @@ function fillSquare(square){
     }//end of checking if the part of the board has this value "free" (Nan)
    }//end of the for loop going through the board array.
  }// end of inPlay
+ changeTurn();
 }// end of fillsqurae function
 
 
+//This will raise the letters of the selection until one is clicked. Until then, the game cannot start.
+var asked = false;
+function askChoice(){
+  //alert("in function ask choice");
+  console.log("in ask Choice");
+  selectorX.style.textShadow = "4px 4px 4px black";
+  selectorX.style.fontSize = "1.5em";
+  selectorO.style.textShadow = "4px 4px 4px black";
+  selectorO.style.fontSize = "1.5em";
+  asked = true;
+}
+
+//This is called when onclick X or O
+function choosePlayer(choice){
+if(!inPlay && asked){
+  console.log("in Choose Player");
+  if(String(choice) == "X"){
+   human.side = "X";ai.side = "0";
+   selectorX.style.textShadow = "4px 4px 4px black";
+   selectorO.style.textShadow = "0px 0px 0px white";
+   selectorO.style.fontSize = "1em";}
+  else{
+   human.side = "O"; ai.side = "X";
+   selectorX.style.textShadow = "0px 0px 0px white";
+   selectorO.style.textShadow = "4px 4px 4px black";
+   selectorX.style.fontSize = "1em";}
+ }
+ inPlay = true;
+ console.log("humanside",human.side);
+ console.log("aiside",ai.side);
+ console.log("inPlay",inPlay);
+}
+
+function changeTurn(){
+ if(turn === "human"){turn = "ai";}
+ else{turn = "human";}
+}
+//Start the game
+function startGame(){
+ //alert("in here");
+if(!inPlay){
+  askChoice();
+ }
+turn = "human";
+}
+
+//destructor function
+function restart(){
+  inPlay = false;
+  human = new player();
+  ai = new player();
+  turn = "";
+  boardConstraints = ORIGboard;
+  asked = false;
+  selectorX.style.textShadow = "2px 2px 2px #8F8F8F";
+  selectorX.style.fontSize = "1em";
+  selectorO.style.textShadow = "2px 2px 2px #8F8F8F";
+  selectorO.style.fontSize = "1em";
+}
+
+//go through the solutions list, and see if any of them have just one left
+//if so, solve!
+function checkForSolution(sbox){
+  
+}
+
+function blockOpponent(bbox){
+ //go through opponents solutions list, and check if any of them have just one left.
+ //if so, block
+}
+  
 //Check if you may need getters and steters in this context.
 function updateSolutionStates(ssquare){
  var ssquarenum = parseInt(parseMap(ssquare));
@@ -108,38 +193,5 @@ function updateConstraints(csquare){
     }//redundantly check if the key is in the map
   }//iterae through the keys of the map
 }//end of the updateConstriants function.
-
-
-//Start the game
-function startGame(){
- if(!inPlay){
-  askChoice();
- }
-}
-  
-//This will raise the letters of the selection until one is clicked. Until then, the game cannot start.
-function askChoice(){
-  var selectorX = document.getElementById("X");
-  var selectorO = document.getElementById("O");
- while(self.side == ""){
-  selectorX.style.textShadow = "4px 4px 4px black";
-  selectorO.style.textShadow = "4px 4px 4px black";
- }
- inPlay = true;
-}
-
-//This is called when onclick X or O
-function choosePlayer(choice){
- if(!inPlay){
-  player = choice;
-  if(choice == "X"){self.side = "X";ai.side = "0";
-   selectorX.style.textShadow = "4px 4px 4px black";
-   selectorO.style.textShadow = "0px 0px 0px white";}
-  else{self.side = "O"; ai.side = "X";
-   selectorX.style.textShadow = "0px 0px 0px white";
-   selectorO.style.textShadow = "4px 4px 4px black";}
- }
-}
-
 
 

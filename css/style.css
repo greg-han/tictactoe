@@ -73,7 +73,7 @@ td:after {
  font-family: 'VT323', monospace;
  font-size: 2em;
  font-weight: bold;
- margin-top: 0.8%;
+ margin-top: 1.5%;
 }
 
 #O{
@@ -91,7 +91,3 @@ td:after {
 
 }
 
-/*#XO{
-  //text-shadow: 2px 2px 2px #8F8F8F;
-  text-shadow: 4px 4px 4px black;
-}*/
