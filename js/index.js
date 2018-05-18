@@ -191,6 +191,8 @@ function restart(){
   selectorO.style.fontSize = "1em";
   restartButton.style.textShadow = "4px 4px 4px black";
   restartButton.style.fontSize = "1.5em";
+  startButton.style.textShadow = "2px 2px 2px #8F8F8F";
+  startButton.style.fontSize = "1em";
   humanWon = [];
   aiWon = [];
   hwon = false;
