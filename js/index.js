@@ -79,9 +79,10 @@ function init(){
 }
 
 //Simply inputs the square, no smarts.
-//don't forget to check if the square is occupied or just don't call this function unless you have the other conditoins met
-//however, you would make this the onclick function so you would have conditional checks in between.
+
+//Right now, the squares get tagged fro some reason.
 function fillSquare(square){
+ console.log("board in fill square",board);
  if (inPlay){
   var squarenum = parseInt(square);
     //This already checks the constraints.
@@ -149,7 +150,6 @@ function changeTurn(){
 
 //Start the game
 function startGame(){
- //alert("in here");
 if(!inPlay){
   askChoice();
  }
@@ -157,8 +157,16 @@ turn = "human";
 }
 
 //destructor function
+//javascript is getting the addresses mixed up between board and ORIGboard after aw hile.
 function restart(){
-  var domarr = Object.values(parseMap);
+  //When set as board = ORIGboard, after a few iterations it would fail
+  //so this function stopped that problem for some reason. (Liekly to do with memory addresses.)
+  board = [];
+  ORIGboard.forEach(function(element){
+   board.push(element);
+  });
+  var domarr = [];
+  domarr = Object.values(parseMap);
   for (var b = 0; b < domarr.length; b++){
    eval(domarr[b]).innerHTML = "";
   }
@@ -171,7 +179,6 @@ function restart(){
   ai.side = "";
   ai.solutionStates = ORIGsolutions;
   boardConstraints = ORIGneighbors;
-  board = ORIGboard;
   selectorX.style.textShadow = "2px 2px 2px #8F8F8F";
   selectorX.style.fontSize = "1em";
   selectorO.style.textShadow = "2px 2px 2px #8F8F8F";
@@ -203,9 +210,9 @@ function updateSolutionStates(ssquare){
    }
   human.solutionsStates = playersolutions;
   ai.solutionStates = aisolutions;
-  console.log("human states",human.solutionStates);
-  console.log("ai states",ai.solutionStates);
  }//end of for loop through solutions;
+  //console.log("human states",human.solutionStates);
+  //console.log("ai states",ai.solutionStates);
 }//end of update solution state function
 
 
@@ -229,7 +236,7 @@ function updateConstraints(csquare){
           }///end of if ai
       }//end of checking if it evne hast he value in the array.
   }//iterae through the keys of the map
- console.log("Constraints After",boardConstraints);
+ //console.log("Constraints After",boardConstraints);
 }//end of the updateConstriants function.
 
 
