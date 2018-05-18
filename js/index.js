@@ -5,6 +5,8 @@ window.onload = init;
 var selectorX = document.getElementById("X");
 var selectorO = document.getElementById("O");
 var winner = document.getElementById("winstate");
+var restartButton = document.getElementById("restart");
+var startButton = document.getElementById("start");
 //Framework for the game.
 //previous assignment should not be turn.
 var turn = "";
@@ -76,16 +78,13 @@ function init(){
 function fillSquare(square){
  if (inPlay){
   //checkForSolution();
-  console.log("Turn",turn);
   var squarenum = parseInt(square);
     //This already checks the constraints.
      //update board.
      if(turn == 'human'){
-       console.log("I'M IN HERE");
        ///do consistency checks here, do not change turns until
        //a square has been picked. You can
         if(board.indexOf(squarenum) != -1 && prevAssignment != eval(turn).side){
-         console.log("I'M ALSO IN HERE");
          board[board.indexOf(squarenum)] = String(human.side);
          eval(parseMap[String(square)]).innerHTML = human.side;
          prevAssignment = human.side;
@@ -137,6 +136,8 @@ if(!inPlay && asked){
    selectorO.style.textShadow = "4px 4px 4px black";
    selectorX.style.fontSize = "1em";}
  }
+ startButton.style.textShadow = "2px 2px 2px #8F8F8F";
+ startButton.style.fontSize = "1em";
  inPlay = true;
 }
 
@@ -148,6 +149,10 @@ function changeTurn(){
 //Start the game
 function startGame(){
 clearBoard();
+restartButton.style.textShadow = "2px 2px 2px #8F8F8F";
+restartButton.style.fontSize = "1em";
+startButton.style.textShadow = "4px 4px 4px black";
+startButton.style.fontSize = "1.5em";
 if(!inPlay){
   askChoice();
  }
@@ -184,6 +189,8 @@ function restart(){
   selectorX.style.fontSize = "1em";
   selectorO.style.textShadow = "2px 2px 2px #8F8F8F";
   selectorO.style.fontSize = "1em";
+  restartButton.style.textShadow = "4px 4px 4px black";
+  restartButton.style.fontSize = "1.5em";
   humanWon = [];
   aiWon = [];
   hwon = false;
@@ -214,9 +221,12 @@ function checkForSolution(){
  if(!hwon && !awon && allFilled){
   draw = true;
  }
- if(draw){winner.innerHTML = "DRAW"; restart();}
- if(hwon){winner.innerHTML = "YOU WON"; restart();}
- if(awon){winner.innerHTML = "YOU LOST"; restart();}
+ if(draw){winner.innerHTML = "DRAW"; restart(); restartButton.style.textShadow = "2px 2px 2px #8F8F8F";
+restartButton.style.fontSize = "1em";}
+ if(hwon){winner.innerHTML = "YOU WON"; restart(); restartButton.style.textShadow = "2px 2px 2px #8F8F8F";
+restartButton.style.fontSize = "1em";}
+ if(awon){winner.innerHTML = "YOU LOST"; restart(); restartButton.style.textShadow = "2px 2px 2px #8F8F8F";
+restartButton.style.fontSize = "1em";}
  humanWon = [];
  aiWon = [];
  hwon = false;
