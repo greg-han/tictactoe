@@ -140,8 +140,6 @@ if(!inPlay && asked){
    selectorX.style.fontSize = "1em";}
  }
  inPlay = true;
- console.log("humansideafterchoose",human.side);
- console.log("aisideafterchoose",ai.side);
 }
 
 function changeTurn(){
@@ -178,8 +176,6 @@ function restart(){
   selectorX.style.fontSize = "1em";
   selectorO.style.textShadow = "2px 2px 2px #8F8F8F";
   selectorO.style.fontSize = "1em";
-  console.log("humanafterrefresh",human);
-  console.log("aiafterrefresh",ai);
 }
 
 //go through the solutions list, and see if any of them have just one left
@@ -215,20 +211,25 @@ function updateSolutionStates(ssquare){
 
 //Do this function over again.
 function updateConstraints(csquare){
- console.log("Board Constraints",boardConstraints);
- for (var key in boardConstraints) {
-      for(var k = 0; k < boardConstraints[key].length; k++){
-        if(boardConstraints[key][k] === parseInt(csquare)){
+ console.log("Board Constraints B4",boardConstraints);
+ var constraintarrs = Object.values(boardConstraints);
+ var keyarrs = Object.keys(boardConstraints);
+ for (var n = 0; n < constraintarrs.length; n++) {
+      if(constraintarrs[n].indexOf(parseInt(csquare)) != -1){
           if(turn === "human"){
-            boardConstraints[key] = human.side;
+            //if it does have the value, then it's index in the temp constraintarrs [n] array will be updated with X or O
+            //constraint arrs and boardconstrinats are iterated in parallel, replace the array in boardConstraints.
+            constraintarrs[n][constraintarrs[n].indexOf(parseInt(csquare))] = human.side;
+            boardConstraints[keyarrs[n]] = constraintarrs[n];
           }//end of if human
           else{
-            boardConstraints[key] = ai.side;
+            // "" repeat above
+            constraintarrs[n][constraintarrs[n].indexOf(parseInt(csquare))] = ai.side;
+            boardConstraints[keyarrs[n]] = constraintarrs[n];
           }///end of if ai
-        }//end of if statement for thev value.
-      }//end of for loop checking the entre board
+      }//end of checking if it evne hast he value in the array.
   }//iterae through the keys of the map
- console.log("constraints",boardConstraints);
+ console.log("Constraints After",boardConstraints);
 }//end of the updateConstriants function.
 
 
