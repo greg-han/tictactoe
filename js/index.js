@@ -7,6 +7,7 @@ var selectorO = document.getElementById("O");
 var winner = document.getElementById("winstate");
 var restartButton = document.getElementById("restart");
 var startButton = document.getElementById("start");
+var center = document.getElementById("22");
 //Framework for the game.
 //previous assignment should not be turn.
 var turn = "";
@@ -29,6 +30,8 @@ var ORIGneighbors = Object.freeze({
  "32" : [22,12,31,33,21,23],
  "33" : [32,31,23,13,22,11]
  });
+
+
 
 //End framework
 
@@ -76,13 +79,13 @@ function init(){
 
 //Right now, the squares get tagged fro some reason.
 function fillSquare(square){
- console.log("I'm in fillSquare. Square: ",square);
+ //console.log("I'm in fillSquare. Square: ",square);
  if (inPlay){
   //checkForSolution();
   var squarenum = parseInt(square);
     //This already checks the constraints.
      //update board.
-     if(turn == 'human'){
+     if(turn === 'human'){
        ///do consistency checks here, do not change turns until
        //a square has been picked. You can
         if(board.indexOf(squarenum) != -1 && prevAssignment != eval(turn).side){
@@ -92,9 +95,8 @@ function fillSquare(square){
          updateConstraints(squarenum); 
          updateSolutionStates(squarenum);
          checkForSolution();
-         changeTurn();
+         //changeTurn();
         }
-
      }//end of if turn is human
      else{//if turn is ai.
         if(board.indexOf(squarenum) != -1 && prevAssignment != eval(turn).side){
@@ -104,7 +106,7 @@ function fillSquare(square){
          updateConstraints(squarenum); 
          updateSolutionStates(squarenum);
          checkForSolution();
-         changeTurn();
+         //changeTurn();
        }//end of if the board is not already filled.
      }//end of else ai
    }//end of inplay
@@ -145,10 +147,8 @@ if(!inPlay && asked){
 function changeTurn(){
  if(turn === "human"){
    turn = "ai";
-   aiTester();
-        }
- else{
-   
+   aiTester();}
+ else{ 
    turn = "human";}
 }
 
@@ -191,6 +191,7 @@ function restart(){
   human.solutionStates = JSON.parse(JSON.stringify(ORIGsolutions));
   ai.side = "";
   ai.solutionStates = JSON.parse(JSON.stringify(ORIGsolutions));
+  boardConstraints = JSON.parse(JSON.stringify(ORIGneighbors));
   selectorX.style.textShadow = "2px 2px 2px #8F8F8F";
   selectorX.style.fontSize = "1em";
   selectorO.style.textShadow = "2px 2px 2px #8F8F8F";
@@ -246,7 +247,7 @@ restartButton.style.fontSize = "1em";}
 //ai specific function. Only needs to be written from the perspective of the AI.
 //returns a boolean, true if blocked or solved false otherwise.
 function blockOrSolve(){
- if(turn == "ai"){
+ if(turn === "ai"){
  //go through opponents solutions list, and check if any of them have just one left.
  //if so, block
  //go through your own solutions list, and see if any have just one solution left if so, solve
@@ -267,7 +268,7 @@ function blockOrSolve(){
  if(solveThese.length > 0){
   solveIndex = solveThese[Math.floor(Math.random()*solveThese.length)];
   placingSquare =  ai.solutionStates[solveIndex].filter(elem => typeof elem == "number");
-  fillSquare(placingSquare[0]);
+  //fillSquare(placingSquare[0]);
   solveThese = [];
   return true;
  }//end of if there are any compatible solution states found.
@@ -282,6 +283,7 @@ for (var k = 0; k < SOLUTION_LENGTH; k++){
  if(blockThese.length > 0){
   blockIndex = blockThese[Math.floor(Math.random()*blockThese.length)];
   placingSquare =  human.solutionStates[blockIndex].filter(elemp => typeof elemp == "number");
+  console.log("I'm in blocker fill when I shouldn't be");
   fillSquare(placingSquare);
   blockThese = [];
   return true;
@@ -334,5 +336,60 @@ function updateConstraints(csquare){
 
 function aiTester(){
   console.log("I'm in AI Tester");
+  if(center.innerHTML == ""){
+   fillSquare("22");
+  }
   blockOrSolve();
+  if(center.innerHTML == ai.side){
+    console.log("right before get LCV();")
+    getLCV();
+   }//end of if you have the center.
 }
+
+function getLCV(){
+ console.log("In LCV");
+ console.log("aiside:",ai.side);
+  
+ console.log("Board Constraints",boardConstraints);
+ squareFilled = false;
+ var corners = [11,13,31,33];
+ var keys = Object.keys(boardConstraints);
+ //shuffle(cornerKeys); //adds soem randomness to selection.
+ var squareVal = 0;
+ var consCountCorner = 0;
+ for(var g = 0; g < corners.length; g++){
+  var mostFree = boardConstraints[corners[g]].filter(notString => typeof notString == "number");
+  console.log("mostFree length",mostFree.length);
+  console.log("consCountCorner",consCountCorner);
+  if(mostFree.length > consCountCorner){
+   squareVal = keys[g];
+   console.log("squareVal: ",squareVal);
+   consCountCorner = mostFree.length;
+  }//end of find largest constraint
+ }//end of loop through
+ if(squareVal > 0){
+  fillSquare(squareVal);
+  squareFilled = true;
+ }
+ //once the corners are taken, you should do just normal LCV
+  //shuffle(keys);
+ if(!squareFilled){
+  var consCount = 0;
+  for(var f = 0; f < keys.length; f++){
+    var mostFreeElse = boardConstraints[keys[f]].filter(notString => typeof notString == "number").slice(0);
+    if(mostFreeElse.length > consCount){
+     console.log("mostFreeElse length",mostFreeElse.length);
+     squareVal = keys[f];
+     consCount = mostFreeElse.length;
+    }
+  }
+ if(squareVal > 0){
+  fillSquare(squareVal);
+  }
+ }
+ var twoLeft = board.filter(value => typeof value == "number");
+ //if there are two left, mostFree == constCount, so just pick one at random (not going to win)
+ if(twoLeft.length == 2){
+  fillSquare(twoLeft[Math.floor(Math.random()*twoLeft.length)]);
+ }
+}//end of LCV function.
