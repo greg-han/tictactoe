@@ -143,8 +143,13 @@ if(!inPlay && asked){
 }
 
 function changeTurn(){
- if(turn === "human"){turn = "ai";}
- else{turn = "human";}
+ if(turn === "human"){
+   turn = "ai";
+   aiTester();
+        }
+ else{
+   
+   turn = "human";}
 }
 
 //Start the game
