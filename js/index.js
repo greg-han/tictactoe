@@ -76,6 +76,7 @@ function init(){
 
 //Right now, the squares get tagged fro some reason.
 function fillSquare(square){
+ console.log("I'm in fillSquare. Square: ",square);
  if (inPlay){
   //checkForSolution();
   var squarenum = parseInt(square);
@@ -237,29 +238,70 @@ restartButton.style.fontSize = "1em";}
  draw = false;
 }
 
-function blockOrSolve(bbox){
+//ai specific function. Only needs to be written from the perspective of the AI.
+//returns a boolean, true if blocked or solved false otherwise.
+function blockOrSolve(){
+ if(turn == "ai"){
  //go through opponents solutions list, and check if any of them have just one left.
  //if so, block
  //go through your own solutions list, and see if any have just one solution left if so, solve
-}
+  var aiArr;
+  var playerArr;
+  var blockThese = [];
+  var solveThese = [];
+  var blockIndex;
+  var solveIndex;
+  var placingSquare = 0;
+  //Now check for solutions.
+  for (var aistep = 0; aistep < SOLUTION_LENGTH; aistep++){
+    aiArr = ai.solutionStates[aistep].filter(element => element == String(ai.side));
+    if(aiArr.length === 2){
+     solveThese.push(aistep);
+    }//end of checking if there is one square left;
+  }//end of for loop 
+ if(solveThese.length > 0){
+  solveIndex = solveThese[Math.floor(Math.random()*solveThese.length)];
+  placingSquare =  ai.solutionStates[solveIndex].filter(elem => typeof elem == "number");
+  fillSquare(placingSquare[0]);
+  solveThese = [];
+  return true;
+ }//end of if there are any compatible solution states found.
   
-//Check if you may need getters and steters in this context.
+  //Now check for blockers.
+for (var k = 0; k < SOLUTION_LENGTH; k++){
+    playerArr = human.solutionStates[k].filter(elem => elem == String(human.side));
+    if(playerArr.length === 2){
+     blockThese.push(k);
+    }//end of checking if there is one square left;
+  }//end of for loop 
+ if(blockThese.length > 0){
+  blockIndex = blockThese[Math.floor(Math.random()*blockThese.length)];
+  placingSquare =  human.solutionStates[blockIndex].filter(elemp => typeof elemp == "number");
+  fillSquare(placingSquare);
+  blockThese = [];
+  return true;
+ }//end of randomly select a block state if there is more than one. (Redundant but necessary).
+ return false;
+ }//end of if it's ai's turn.
+}//end of blockorSolve function.
+  
+
 
 function updateSolutionStates(ssquare){
  var ssquarenum = parseInt(ssquare);
  for(var m = 0; m < SOLUTION_LENGTH; m++){
    if((human.solutionStates[m].indexOf(ssquarenum) != -1) && turn == "human"){
      human.solutionStates[m][human.solutionStates[m].indexOf(ssquarenum)] = human.side;
-     console.log("human square num",ssquarenum);
-     console.log("humansolutions",human.solutionStates);
+     //console.log("human square num",ssquarenum);
+     //console.log("humansolutions",human.solutionStates);
    }
    if((ai.solutionStates[m].indexOf(ssquarenum) != -1) && turn == "ai"){
      ai.solutionStates[m][ai.solutionStates[m].indexOf(ssquarenum)] = ai.side;
-     console.log("aisolutions",ai.solutionStates);
+     //console.log("aisolutions",ai.solutionStates);
    }
  }//end of for loop through solutions;
-  console.log("human states",human.solutionStates);
-  console.log("ai states",ai.solutionStates);
+  //console.log("human states",human.solutionStates);
+  //console.log("ai states",ai.solutionStates);
 }//end of update solution state function
 
 
@@ -285,4 +327,7 @@ function updateConstraints(csquare){
  //console.log("Constraints After",boardConstraints);
 }//end of the updateConstriants function.
 
-
+function aiTester(){
+  console.log("I'm in AI Tester");
+  blockOrSolve();
+}
