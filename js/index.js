@@ -79,7 +79,6 @@ function init(){
 
 //Right now, the squares get tagged fro some reason.
 function fillSquare(square){
- //console.log("I'm in fillSquare. Square: ",square);
  if (inPlay){
   //checkForSolution();
   var squarenum = parseInt(square);
@@ -95,7 +94,7 @@ function fillSquare(square){
          updateConstraints(squarenum); 
          updateSolutionStates(squarenum);
          checkForSolution();
-         //changeTurn();
+         changeTurn();
         }
      }//end of if turn is human
      else{//if turn is ai.
@@ -106,16 +105,15 @@ function fillSquare(square){
          updateConstraints(squarenum); 
          updateSolutionStates(squarenum);
          checkForSolution();
-         //changeTurn();
        }//end of if the board is not already filled.
      }//end of else ai
    }//end of inplay
+  
  }//end of fillsquare 
 
 
 //This will raise the letters of the selection until one is clicked. Until then, the game cannot start.
 function askChoice(){
-  //alert("in function ask choice");
   if(!asked){
   selectorX.style.textShadow = "4px 4px 4px black";
   selectorX.style.fontSize = "1.5em";
@@ -167,6 +165,7 @@ turn = "human";
 }
 
 function clearBoard(){
+   board = [];
    ORIGboard.forEach(function(element){
    board.push(element);
   });
@@ -258,64 +257,67 @@ function blockOrSolve(){
   var blockIndex;
   var solveIndex;
   var placingSquare = 0;
+  var checkOpenai;
+  var checkOpenhum;
   //Now check for solutions.
   for (var aistep = 0; aistep < SOLUTION_LENGTH; aistep++){
-    aiArr = ai.solutionStates[aistep].filter(element => element == String(ai.side));
+    aiArr = ai.solutionStates[aistep].filter(element => element == String(ai.side));                                                                 
     if(aiArr.length === 2){
+     checkOpenai = ai.solutionStates[aistep].filter(num => board.indexOf(num) != -1);
+     checkOpenai = checkOpenai.filter(m => typeof m == "number");
+    if(checkOpenai.length > 0){
      solveThese.push(aistep);
+     }
     }//end of checking if there is one square left;
   }//end of for loop 
  if(solveThese.length > 0){
   solveIndex = solveThese[Math.floor(Math.random()*solveThese.length)];
   placingSquare =  ai.solutionStates[solveIndex].filter(elem => typeof elem == "number");
-  //fillSquare(placingSquare[0]);
-  solveThese = [];
+  fillSquare(placingSquare[0]);
   return true;
  }//end of if there are any compatible solution states found.
-  
+
   //Now check for blockers.
 for (var k = 0; k < SOLUTION_LENGTH; k++){
     playerArr = human.solutionStates[k].filter(elem => elem == String(human.side));
     if(playerArr.length === 2){
-     blockThese.push(k);
+      checkOpenhum = human.solutionStates[k].filter(numhum => (board.indexOf(numhum) != -1));
+      checkOpenhum = checkOpenhum.filter(n => typeof n == "number");
+      if(checkOpenhum.length > 0){
+       blockThese.push(k);
+      }
     }//end of checking if there is one square left;
   }//end of for loop 
  if(blockThese.length > 0){
   blockIndex = blockThese[Math.floor(Math.random()*blockThese.length)];
   placingSquare =  human.solutionStates[blockIndex].filter(elemp => typeof elemp == "number");
-  console.log("I'm in blocker fill when I shouldn't be");
   fillSquare(placingSquare);
-  blockThese = [];
   return true;
- }//end of randomly select a block state if there is more than one. (Redundant but necessary).
- return false;
- }//end of if it's ai's turn.
-}//end of blockorSolve function.
+   }//end of randomly select a block state if there is more than one. (Redundant but necessary)
+  }//end of loop
+  return false;
+}
   
 
 
 function updateSolutionStates(ssquare){
  var ssquarenum = parseInt(ssquare);
+  
  for(var m = 0; m < SOLUTION_LENGTH; m++){
    if((human.solutionStates[m].indexOf(ssquarenum) != -1) && turn == "human"){
      human.solutionStates[m][human.solutionStates[m].indexOf(ssquarenum)] = human.side;
-     //console.log("human square num",ssquarenum);
-     //console.log("humansolutions",human.solutionStates);
    }
    if((ai.solutionStates[m].indexOf(ssquarenum) != -1) && turn == "ai"){
      ai.solutionStates[m][ai.solutionStates[m].indexOf(ssquarenum)] = ai.side;
-     //console.log("aisolutions",ai.solutionStates);
    }
  }//end of for loop through solutions;
-  //console.log("human states",human.solutionStates);
-  //console.log("ai states",ai.solutionStates);
 }//end of update solution state function
 
 
 //Do this function over again.
 function updateConstraints(csquare){
- var constraintarrs = Object.values(boardConstraints);
- var keyarrs = Object.keys(boardConstraints);
+ var constraintarrs = JSON.parse(JSON.stringify(Object.values(boardConstraints)));
+ var keyarrs = JSON.parse(JSON.stringify(Object.keys(boardConstraints)));
  for (var n = 0; n < constraintarrs.length; n++) {
       if(constraintarrs[n].indexOf(parseInt(csquare)) != -1){
           if(turn === "human"){
@@ -331,42 +333,39 @@ function updateConstraints(csquare){
           }///end of if ai
       }//end of checking if it evne hast he value in the array.
   }//iterae through the keys of the map
- //console.log("Constraints After",boardConstraints);
 }//end of the updateConstriants function.
 
+
 function aiTester(){
-  console.log("I'm in AI Tester");
   if(center.innerHTML == ""){
    fillSquare("22");
   }
-  blockOrSolve();
-  if(center.innerHTML == ai.side){
-    console.log("right before get LCV();")
+ if(center.innerHTML == ai.side && !blockOrSolve()){
     getLCV();
-   }//end of if you have the center.
+   }
+ if(center.innerHTML == human.side && !blockOrSolve()){
+     getMRV();
+     }
+  changeTurn();
 }
 
-function getLCV(){
- console.log("In LCV");
- console.log("aiside:",ai.side);
-  
- console.log("Board Constraints",boardConstraints);
- squareFilled = false;
+//Need to put a conditioh of whether it's in the board or not before
+//because you get into fillSquqre and fillSquare rejects
+ function getLCV(){
  var corners = [11,13,31,33];
  var keys = Object.keys(boardConstraints);
  //shuffle(cornerKeys); //adds soem randomness to selection.
  var squareVal = 0;
  var consCountCorner = 0;
+ var squareFilled = false;
  for(var g = 0; g < corners.length; g++){
   var mostFree = boardConstraints[corners[g]].filter(notString => typeof notString == "number");
-  console.log("mostFree length",mostFree.length);
-  console.log("consCountCorner",consCountCorner);
-  if(mostFree.length > consCountCorner){
+  if(mostFree.length > consCountCorner && board.indexOf(keys[g]) != -1){
    squareVal = keys[g];
-   console.log("squareVal: ",squareVal);
    consCountCorner = mostFree.length;
   }//end of find largest constraint
  }//end of loop through
+   
  if(squareVal > 0){
   fillSquare(squareVal);
   squareFilled = true;
@@ -377,19 +376,48 @@ function getLCV(){
   var consCount = 0;
   for(var f = 0; f < keys.length; f++){
     var mostFreeElse = boardConstraints[keys[f]].filter(notString => typeof notString == "number").slice(0);
-    if(mostFreeElse.length > consCount){
-     console.log("mostFreeElse length",mostFreeElse.length);
+    if(mostFreeElse.length > consCount && board.indexOf(keys[f]) != -1){
      squareVal = keys[f];
      consCount = mostFreeElse.length;
     }
   }
  if(squareVal > 0){
   fillSquare(squareVal);
+  squareFilled = true;
   }
  }
- var twoLeft = board.filter(value => typeof value == "number");
+ //Either no options left, or there is no LCV
+ if(!squareFilled){
+ var valsLeft = board.filter(value => typeof value == "number");
  //if there are two left, mostFree == constCount, so just pick one at random (not going to win)
- if(twoLeft.length == 2){
-  fillSquare(twoLeft[Math.floor(Math.random()*twoLeft.length)]);
+ if(valsLeft.length >= 2){
+  fillSquare(valsLeft[Math.floor(Math.random()*valsLeft.length)]);
+  }
  }
 }//end of LCV function.
+
+
+function getMRV(){
+  var minCount = 99;
+  var squareValue = 0;
+  var mrvSquareFilled = false;
+  var mrvKeys = Object.keys(boardConstraints);
+  for(var o = 0; o < mrvKeys.length; o++){
+    var leastFree = boardConstraints[mrvKeys[o]].filter(notAString => typeof notAString == "number").slice(0);
+    if(leastFree.length < minCount && board.indexOf(parseInt(mrvKeys[o])) != -1){
+     squareValue = mrvKeys[o];
+     minCount = leastFree.length;
+    }
+  }
+ if(squareValue > 0){
+  fillSquare(squareValue);
+  mrvSquareFilled = true;
+  }
+ }
+ //Either no options left, or there is no MRV
+ if(!mrvSquareFilled){
+ var valuesLeft = board.filter(value1 => typeof value1 == "number");
+ if(valuesLeft.length >= 1){
+  fillSquare(valuesLeft[Math.floor(Math.random()*valuesLeft.length)]);
+ }
+}
