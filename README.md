@@ -1,10 +1,11 @@
 ## Tic Tac Toe
 Pretty self explanatory.
-My attempt at making a tic tac toe game.
+My attempt at making a tic tac toe game with a rudimentary AI.
+Purposefully did not use any outside resources for planning the AI strategy so that I can practice and implement what I had learned in school.
+It turned out meh, but it has legitimately beat me once lol.
 
-Update 3/14/18: Initial Commit. Literally just started this and designed the layout. So far, the general (In English) logic for the game is thought out.
-Will be using constraint satisfaction. At the moment considering just using MRV and LCV with a single condition before.
-Posting this early so that I can commit, add, push, etc. as i'm working on it.
+Uses MRV/LCV depending on if it gets the center square. If it has the center square, it will be on the offense and use MRV. If it does not, then it will use LCV and play defensively. Sometimes it will just not get position at all.
+
 
 Link to site: https://greg-han.github.io/tictactoe/
 
