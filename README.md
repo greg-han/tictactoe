@@ -1,14 +1,5 @@
 ## Tic Tac Toe
 Pretty self explanatory.
-<<<<<<< HEAD
-My attempt at making a tic tac toe game.
-
-Update 3/14/18: Initial Commit. Literally just started this and designed the layout. So far, the general (In English) logic for the game is thought out.
-Will be using constraint satisfaction. At the moment considering just using MRV and LCV with a single condition before.
-Posting this early so that I can commit, add, push, etc. as i'm working on it.
-
-Link to site: https://greg-han.github.io/tictactoe/
-=======
 My attempt at making a tic tac toe game with a rudimentary AI.
 Purposefully did not use or read about any outside resources for planning the AI strategy so that I can practice and implement what I had learned in school.
 It turned out meh, but it has legitimately beat me once lol.
@@ -22,7 +13,6 @@ Sometimes it will just not get position at all. This is from the built in random
 Link to site: https://greg-han.github.io/tictactoe
 If the github page is down, the project is viewable on codepen here:
 https://codepen.io/greg-han/pen/YLJror
->>>>>>> 616c782a820ab46eba29c7c29e98968130636420
 
 ## Features
 
