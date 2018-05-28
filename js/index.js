@@ -1,4 +1,4 @@
-window.onload = init;
+//window.onload = init;
 //Try "blocking" check if X is close to copmlete
 //If not, use the LCV heuristic.
 //This can be set with "X" and "O" in the slots if need be.
