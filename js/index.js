@@ -421,3 +421,4 @@ function getMRV(){
   fillSquare(valuesLeft[Math.floor(Math.random()*valuesLeft.length)]);
  }
 }
+init();
