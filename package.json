@@ -1,0 +1,22 @@
+{
+  "name": "tictactoe",
+  "version": "1.0.0",
+  "description": "a tic tac toe game with an AI",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/greg-han/tictactoe.git"
+  },
+  "author": "Gregory Han",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/greg-han/tictactoe/issues"
+  },
+  "homepage": "https://github.com/greg-han/tictactoe#readme",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}

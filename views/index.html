@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  <title>TicTacToe</title>
+  <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  
+  
+      <link rel="stylesheet" href="../styles/style.css">
+
+  
+</head>
+
+<body>
+
+  <td class="container-fluid">
+<fieldset>
+<table id="gameboard">
+<h1> Tic Tac Toe</h1>
+ <tr id = "row1"> 
+   <td class="circle" onclick="fillSquare(11)"><a id="11"></a></td>
+   <td class="circle" onclick="fillSquare(12)"><a id="12"></a></td>
+   <td class="circle" onclick="fillSquare(13)"><a id="13"></a></td>
+  </tr>
+ <tr id = "row2"> 
+   <td class="circle" onclick="fillSquare(21)"><a id="21"></a></td>
+   <td class="circle" onclick="fillSquare(22)"><a id="22"></a></td>
+   <td class="circle" onclick="fillSquare(23)"><a id="23"></a></td>
+  </tr>
+ <tr id = "row3"> 
+   <td class="circle" onclick="fillSquare(31)"><a id="31"></a></td>
+   <td class="circle" onclick="fillSquare(32)"><a id="32"></a></td>
+   <td class="circle" onclick="fillSquare(33)"><a id="33"></a></td>
+  </tr>
+</table>
+  <div id="buttons">
+    <a id="start" onclick="startGame()">start</a>
+    <a id="restart" onclick="restart()">restart</a>
+    <a id="X" onclick="choosePlayer('X')">X</a>/
+    <a id="O" onclick="choosePlayer('O')">O</a>
+  </fieldset>
+  <div id ="winstate"></div>
+  
+  
+
+    <script  src="../scripts/index.js"></script>
+
+
+
+
+</body>
+
+</html>
