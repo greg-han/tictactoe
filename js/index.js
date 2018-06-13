@@ -60,7 +60,7 @@ var ai = {
 }
 
 //constructor
-function init(){
+//function init(){
 //redundantly storing domain access in an object for practice.
  oneone = document.getElementById("11");
  onetwo = document.getElementById("12");
@@ -73,7 +73,7 @@ function init(){
  threethree = document.getElementById("33");
  boardConstraints = Object.assign({},ORIGneighbors);
  
-}
+//}
 
 //Simply inputs the square, no smarts.
 
