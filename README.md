@@ -11,6 +11,7 @@ Sometimes it will just not get position at all. This is from the built in random
 
 
 Link to site: https://greg-han.github.io/tictactoe
+
 If the github page is down, the project is viewable on codepen here:
 https://codepen.io/greg-han/pen/YLJror
 
